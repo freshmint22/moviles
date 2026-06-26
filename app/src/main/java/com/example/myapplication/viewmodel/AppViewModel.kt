@@ -46,6 +46,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     init {
         viewModelScope.launch {
             challengeRepository.ensureSeeded()
+            _isAudioOn.value = true
             startBackgroundAudioIfNeeded()
         }
     }
@@ -60,16 +61,17 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun pauseAudioTemporarily() {
-        audioController.stopBackground()
+        audioController.pauseBackground()
     }
 
     fun resumeAudioIfOn() {
         if (_isAudioOn.value) {
-            startBackgroundAudioIfNeeded()
+            audioController.resumeBackground()
         }
     }
 
     fun playSpinSound(durationMs: Long) {
+        if (!_isAudioOn.value) return
         audioController.playSpin(durationMs)
     }
 
@@ -77,6 +79,10 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         if (_isAudioOn.value) {
             audioController.startBackground(viewModelScope)
         }
+    }
+
+    fun stopBackgroundAudio() {
+        audioController.stopBackground()
     }
 
     fun addChallenge(description: String) {
@@ -106,6 +112,11 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     suspend fun getRandomPokemonImage(): String? {
         return pokemonRepository.getRandomPokemon()?.img
+    }
+
+    override fun onCleared() {
+        audioController.stopBackground()
+        super.onCleared()
     }
 }
 

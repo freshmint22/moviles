@@ -1,9 +1,12 @@
 package com.example.myapplication.ui.fragment
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -30,11 +33,11 @@ class HomeFragment : Fragment() {
                     val isAudioOn = viewModel.isAudioOn.collectAsState().value
                     HomeScreen(
                         isAudioOn = isAudioOn,
-                        onRate = { findNavController().navigate(R.id.rateFragment) },
+                        onRate = { openStoreForRating() },
                         onToggleAudio = { viewModel.toggleAudio() },
                         onInstructions = { findNavController().navigate(R.id.instructionsFragment) },
                         onChallenges = { findNavController().navigate(R.id.challengesFragment) },
-                        onShare = { findNavController().navigate(R.id.shareFragment) },
+                        onShare = { shareApp() },
                         onPauseBackground = { viewModel.pauseAudioTemporarily() },
                         onResumeBackground = { viewModel.resumeAudioIfOn() },
                         onPlaySpinSound = { duration -> viewModel.playSpinSound(duration) },
@@ -44,6 +47,35 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun openStoreForRating() {
+        val appId = "com.nequi.MobileApp"
+        val marketIntent = Intent(Intent.ACTION_VIEW, "market://details?id=$appId".toUri())
+        val webIntent = Intent(
+            Intent.ACTION_VIEW,
+            "https://play.google.com/store/apps/details?id=$appId&hl=es_419&gl=es".toUri()
+        )
+
+        try {
+            startActivity(marketIntent)
+        } catch (_: ActivityNotFoundException) {
+            startActivity(webIntent)
+        }
+    }
+
+    private fun shareApp() {
+        val title = getString(R.string.share_app_title)
+        val slogan = getString(R.string.share_app_slogan)
+        val url = getString(R.string.share_app_url)
+        val text = "$title\n$slogan\n$url"
+
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_SUBJECT, title)
+            putExtra(Intent.EXTRA_TEXT, text)
+        }
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_chooser_title)))
     }
 }
 
