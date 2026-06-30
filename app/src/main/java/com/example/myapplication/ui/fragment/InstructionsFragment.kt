@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.example.myapplication.R
 import com.example.myapplication.ui.screens.InstructionsScreen
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.viewmodel.AppViewModel
@@ -41,7 +42,9 @@ class InstructionsFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 MyApplicationTheme {
-                    InstructionsScreen(onBack = { findNavController().popBackStack() })
+                    InstructionsScreen(
+                        onBack = { findNavController().popBackStack(R.id.homeFragment, false) }
+                    )
                 }
             }
         }

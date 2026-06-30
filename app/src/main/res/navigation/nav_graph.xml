@@ -24,10 +24,6 @@
         android:name="com.example.myapplication.ui.fragment.ChallengesFragment"
         android:label="Challenges" />
 
-    <fragment
-        android:id="@+id/rateFragment"
-        android:name="com.example.myapplication.ui.fragment.RateFragment"
-        android:label="Rate" />
 
     <fragment
         android:id="@+id/shareFragment"

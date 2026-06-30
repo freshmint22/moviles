@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.example.myapplication.R
 import com.example.myapplication.ui.screens.ChallengesScreen
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.viewmodel.AppViewModel
@@ -45,7 +46,7 @@ class ChallengesFragment : Fragment() {
                     val challenges = viewModel.challenges.collectAsState().value
                     ChallengesScreen(
                         challenges = challenges,
-                        onBack = { findNavController().popBackStack() },
+                        onBack = { findNavController().popBackStack(R.id.homeFragment, false) },
                         onAddChallenge = { description -> viewModel.addChallenge(description) },
                         onUpdateChallenge = { id, description -> viewModel.updateChallenge(id, description) },
                         onDeleteChallenge = { id -> viewModel.deleteChallenge(id) }
